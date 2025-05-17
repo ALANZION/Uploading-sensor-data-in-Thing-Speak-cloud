@@ -1,4 +1,4 @@
-# NAME: ALAN ZION H
+## NAME: ALAN ZION H
 ## REG NO: 212223240004
 
 # EX 03 Uploading temperature sensor data in Thing Speak cloud
