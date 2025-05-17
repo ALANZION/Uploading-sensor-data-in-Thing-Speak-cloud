@@ -1,4 +1,7 @@
-# Uploading temperature sensor data in Thing Speak cloud
+# NAME: ALAN ZION H
+## REG NO: 212223240004
+
+# EX 03 Uploading temperature sensor data in Thing Speak cloud
 
 # AIM:
 To monitor the temperature sensor data in the Thing speak using an ESP32 controller.
