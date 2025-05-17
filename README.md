@@ -71,10 +71,87 @@ Automatically act on your data and communicate using third-party services like T
 
 
 # PROGRAM:
+#include "ThingSpeak.h"
+#include <WiFi.h>
+#include "DHT.h"
+
+
+char ssid[] = "Alan7";
+char pass[] = "zion20";
+
+
+const int out = 23;
+
+
+DHT dht(out, DHT11);
+
+
+WiFiClient client;
+unsigned long myChannelField = 2913861;
+const int TemperatureField = 1;
+const int HumidityField = 2;
+const char *myWriteAPIKey = "TQGA3YTFVZ9D7DK3";
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(out, INPUT);
+  dht.begin();
+  WiFi.begin(ssid, pass);
+  ThingSpeak.begin(client);
+
+  // Connect to WiFi
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.print(".");
+    delay(500);
+  }
+  Serial.println("\nConnected to WiFi.");
+}
+
+void loop() {
+  // Check and reconnect WiFi if disconnected
+  if (WiFi.status() != WL_CONNECTED) {
+    Serial.println("Reconnecting to WiFi...");
+    WiFi.begin(ssid, pass);
+    delay(5000);
+    return;
+  }
+
+  // Read sensor data
+  float temperature = dht.readTemperature();
+  float humidity = dht.readHumidity();
+
+  // Check for reading errors
+  if (isnan(temperature) || isnan(humidity)) {
+    Serial.println("Failed to read from DHT sensor!");
+    return;
+  }
+
+  // Display on Serial Monitor
+  Serial.print("Temperature: ");
+  Serial.print(temperature);
+  Serial.println(" °C");
+
+  Serial.print("Humidity: ");
+  Serial.print(humidity);
+  Serial.println(" %");
+
+  // Write to ThingSpeak
+  ThingSpeak.writeField(myChannelField, TemperatureField, temperature, myWriteAPIKey);
+  ThingSpeak.writeField(myChannelField, HumidityField, humidity, myWriteAPIKey);
+
+  delay(1000);  // Wait before next update (ThingSpeak allows 15s min interval)
+}
+
+
+
 
 # CIRCUIT DIAGRAM:
+![image](https://github.com/user-attachments/assets/95040b50-3c46-424e-9e82-a3cab19b6d35)
+
 
 # OUTPUT:
+![436914076-5badd06c-5906-42d7-8f29-bf146f29b099](https://github.com/user-attachments/assets/55a9b509-74bb-4348-a811-90641526a092)
+
 
 # RESULT:
 
